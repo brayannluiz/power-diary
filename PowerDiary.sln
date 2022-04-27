@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{513118F4-AA6A-4756-9A6D-E9A088A3DA43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{04D0B3D3-54DE-4F21-8DA8-EF3B41FDD4A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDiary.ChatRoom.ConsoleInterface", "src\PowerDiary.ChatRoom.ConsoleInterface\PowerDiary.ChatRoom.ConsoleInterface.csproj", "{01F962AE-7107-4901-8750-8CE2C3295F40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDiary.ChatRoom.Core", "src\PowerDiary.ChatRoom.Core\PowerDiary.ChatRoom.Core.csproj", "{ED914D88-4171-4F54-BF46-87F0147138AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerDiary.ChatRoom.Test.Core", "test\PowerDiary.ChatRoom.Test.Core\PowerDiary.ChatRoom.Test.Core.csproj", "{9DF7E039-864A-4510-B581-73EA21455478}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01F962AE-7107-4901-8750-8CE2C3295F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F962AE-7107-4901-8750-8CE2C3295F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F962AE-7107-4901-8750-8CE2C3295F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F962AE-7107-4901-8750-8CE2C3295F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED914D88-4171-4F54-BF46-87F0147138AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED914D88-4171-4F54-BF46-87F0147138AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED914D88-4171-4F54-BF46-87F0147138AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED914D88-4171-4F54-BF46-87F0147138AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF7E039-864A-4510-B581-73EA21455478}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF7E039-864A-4510-B581-73EA21455478}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF7E039-864A-4510-B581-73EA21455478}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF7E039-864A-4510-B581-73EA21455478}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01F962AE-7107-4901-8750-8CE2C3295F40} = {513118F4-AA6A-4756-9A6D-E9A088A3DA43}
+		{ED914D88-4171-4F54-BF46-87F0147138AA} = {513118F4-AA6A-4756-9A6D-E9A088A3DA43}
+		{9DF7E039-864A-4510-B581-73EA21455478} = {04D0B3D3-54DE-4F21-8DA8-EF3B41FDD4A9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A118A968-7EF7-44B8-8E7D-C9CFE859A3B5}
+	EndGlobalSection
+EndGlobal

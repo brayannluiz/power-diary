@@ -13,9 +13,9 @@ namespace PowerDiary.ChatRoom.Core.Application
     {
         private readonly ChatEventRepository _repository;
 
-        public ChatEventAppService()
+        public ChatEventAppService(ChatEventRepository repository)
         {
-            _repository = new ChatEventRepository();
+            _repository = repository;
         }
 
         public IEnumerable<string> GetChatEventsMinuteByMinute()
@@ -25,29 +25,33 @@ namespace PowerDiary.ChatRoom.Core.Application
             return chatEvents;
         }
 
-        public IEnumerable<ChatEventGroupDto> GetChatEventsHourly()
+        public IEnumerable<ChatEventGroupDescriptionByTimeDto> GetChatEventsHourly()
         {
             var chatEventsGroupedByHour =
                 from chatEvents in _repository.GetAll()
                 orderby chatEvents.Time
                 group chatEvents by chatEvents.Hour into groupedChatEventsByHour
-                select new ChatEventGroupDto
+                select new ChatEventGroupByTimeDto
                 {
                     Time = groupedChatEventsByHour.Key,
                     ChatEvents = groupedChatEventsByHour.Select(chatEvent => new ChatEventGroupItemDto
                     {
                         ChatEventType = chatEvent.Type,
-                        Count = groupedChatEventsByHour.Count(g => g.Type == chatEvent.Type)
+                        Count = groupedChatEventsByHour.Count(g => g.Type == chatEvent.Type),
+                        UserCount = 
+                            chatEvent.Type == ChatEventType.HighFiveAnotherUser ? groupedChatEventsByHour.Where(g => g.Type == chatEvent.Type).Select(g => g.User.Id).Distinct().Count() : 0,
+                        UserInteractedWithCount = 
+                            chatEvent.Type == ChatEventType.HighFiveAnotherUser ? groupedChatEventsByHour.Where(g => g.Type == chatEvent.Type).Select(g => g.UserInteractedWith.Id).Distinct().Count() : 0,
                     }),                    
                 };
 
-            foreach (var chatEventGroupedByHour in chatEventsGroupedByHour.ToList())
+            var dto = chatEventsGroupedByHour.Select(e => new ChatEventGroupDescriptionByTimeDto
             {
-                chatEventGroupedByHour.ChatEventDescriptions = new List<string>();
-                chatEventGroupedByHour.ChatEventDescriptions.AddRange(ExtractChatEventDescriptions(chatEventGroupedByHour.ChatEvents));
-            }
-
-            return chatEventsGroupedByHour;
+                Time = e.Time,
+                ChatEventDescriptions = ExtractChatEventDescriptions(e.ChatEvents)
+            });
+            
+            return dto;
         }
 
         private List<string> ExtractChatEventDescriptions(IEnumerable<ChatEventGroupItemDto> chatEvents)
@@ -56,12 +60,20 @@ namespace PowerDiary.ChatRoom.Core.Application
 
             var messageForThoseWhoEnteredTheRoom = ExtractMessageForThoseWhoEnteredTheRoom(chatEvents);
             var messageForThoseWhoLeftTheRoom = ExtractMessageForThoseWhoLeftTheRoom(chatEvents);
+            var messageForThoseWhoLeftComments = ExtractMessageForThoseWhoLeftComments(chatEvents);
+            var messageForThoseWhoHighFivedOtherPeople = ExtractMessageForThoseWhoHighFivedOtherPeople(chatEvents);
 
             if (messageForThoseWhoEnteredTheRoom != null)
                 messages.Add(messageForThoseWhoEnteredTheRoom);
 
             if (messageForThoseWhoLeftTheRoom != null)
                 messages.Add(messageForThoseWhoLeftTheRoom);
+
+            if (messageForThoseWhoLeftComments != null)
+                messages.Add(messageForThoseWhoLeftComments);
+
+            if (messageForThoseWhoHighFivedOtherPeople != null)
+                messages.Add(messageForThoseWhoHighFivedOtherPeople);
 
             return messages;
         }
@@ -73,7 +85,9 @@ namespace PowerDiary.ChatRoom.Core.Application
             if (dto == null)
                 return null;
 
-            return $"{dto.Count} entered the room";
+            var treatmentForUser = dto.UserCount == 1 ? "person" : "people";
+
+            return $"{dto.Count} {treatmentForUser} entered the room";
         }
 
         private string ExtractMessageForThoseWhoLeftTheRoom(IEnumerable<ChatEventGroupItemDto> chatEvents)
@@ -86,5 +100,28 @@ namespace PowerDiary.ChatRoom.Core.Application
             return $"{dto.Count} left";
         }
 
+        private string ExtractMessageForThoseWhoLeftComments(IEnumerable<ChatEventGroupItemDto> chatEvents)
+        {
+            var dto = chatEvents.FirstOrDefault(chatEvent => chatEvent.ChatEventType == ChatEventType.Comment);
+
+            if (dto == null)
+                return null;
+
+            return $"{dto.Count} comments";
+        }
+
+        private string ExtractMessageForThoseWhoHighFivedOtherPeople(IEnumerable<ChatEventGroupItemDto> chatEvents)
+        {
+            var dto = chatEvents.FirstOrDefault(chatEvent => chatEvent.ChatEventType == ChatEventType.HighFiveAnotherUser);
+
+            if (dto == null)
+                return null;
+
+            var treatmentForUser = dto.UserCount == 1 ? "person" : "people";
+            var treatmentUserInteractedWith = dto.UserInteractedWithCount == 1 ? "person" : "people";
+
+
+            return $"{dto.UserCount} {treatmentForUser} high-fived {dto.UserInteractedWithCount} {treatmentUserInteractedWith}";
+        }
     }
 }

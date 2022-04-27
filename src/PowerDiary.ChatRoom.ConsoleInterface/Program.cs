@@ -1,6 +1,9 @@
 ﻿using PowerDiary.ChatRoom.Core.Application;
+using PowerDiary.ChatRoom.Core.Repository;
 
-var appService = new ChatEventAppService();
+// TODO: Maybe IoC eventually? 
+var repository = new ChatEventRepository();
+var appService = new ChatEventAppService(repository);
 
 Console.WriteLine("Hi, this is the chat history for Power Diary. I'm actually kind of hungry, so lets get to it...\n\n");
 Console.WriteLine("Press 1 for a minute by minute granularity");
@@ -26,6 +29,9 @@ switch (key)
         
 }
 
+Console.WriteLine("Thanks!");
+Console.ReadLine();
+
 void PrintChatEventsMinuteByMinute()
 {
     Console.WriteLine("\n");
@@ -34,25 +40,20 @@ void PrintChatEventsMinuteByMinute()
     {
         Console.WriteLine(item);
     }
-
-    Console.ReadLine();
 }
 
 void PrintChatEventsHourly()
 {
     foreach (var chatEventByHour in appService.GetChatEventsHourly())
     {
-        Console.WriteLine(chatEventByHour.Time);
+        Console.WriteLine("\n");
+        Console.WriteLine($"{chatEventByHour.Time}:");
 
         foreach (var item in chatEventByHour.ChatEventDescriptions)
         {
-            Console.WriteLine($"\t{chatEventByHour.Time}");
+            Console.WriteLine($"\t{item}");
         }
 
         Console.WriteLine("\n");
-    }
-
-    Console.ReadLine();
+    }    
 }
-
-

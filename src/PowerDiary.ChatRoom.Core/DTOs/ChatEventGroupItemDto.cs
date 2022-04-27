@@ -6,5 +6,7 @@ namespace PowerDiary.ChatRoom.Core.DTOs
     {
         public ChatEventType ChatEventType { get; set; }
         public int Count { get; set; }
+        public int? UserCount { get; set; }
+        public int? UserInteractedWithCount { get; set; }
     }
 }
